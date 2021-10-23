@@ -88,7 +88,7 @@
         }
 
         #musicPlayer .bd .list {
-            width: 200px;
+            width: 250px;
             height: 100%;
             overflow: auto;
         }
@@ -157,8 +157,38 @@
             height: 100%;
         }
 
+        .circle .icon-play,
+        .circle .icon-pause {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            font-size: 80px;
+            line-height: 90px;
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: none;
+            cursor: pointer;
+        }
+
+        .circle .icon-pause {
+            transform: translate(-50%, -50%) rotate(90deg);
+        }
+
+        .circle:hover .icon-play {
+            display: block;
+        }
+
+        .circle:hover .icon-pause {
+            display: block;
+        }
+
         #musicPlayer .bd .comments {
-            width: 200px;
+            width: 250px;
             height: 100%;
             font-size: 16px;
             overflow: auto;
@@ -248,10 +278,11 @@
                     </ul>
                 </div>
                 <div class="display">
-                    <div class="circle" :style="albumPicStyle">
-                        <img src="images/wbb.jpg" :src="albumPicUrl">
+                    <div class="circle">
+                        <img src="images/wbb.jpg" :src="albumPicUrl" :style="albumPicStyle">
+                        <span class="icon-play" v-show="songPaused" @click="play">></span>
+                        <span class="icon-pause" v-show="!songPaused" @click="pause">=</span>
                     </div>
-
                 </div>
                 <div class="comments">
                     热门评论
@@ -270,7 +301,7 @@
                 </div>
             </div>
             <div class="ft">
-                <audio id="audio" src="media/song.mp3" :src="songPlayingUrl" controls autoplay @play="listenPlay" @pause="listenPause" ref="audio"></audio>
+                <audio id="audio" src="media/song.mp3" :src="songPlayingUrl" controls autoplay @play="play" @pause="pause" ref="audio"></audio>
             </div>
         </div>
         <div class="modal" v-show="showMV" @click.self="removeMV" :style="{'z-index': showMV ? 1 : -2}">
@@ -288,6 +319,7 @@
                 searchKeyword: '演员',
                 list: [],
                 songPlayingUrl: 'media/song.mp3',
+                songPaused: true,
                 albumPicUrl: 'images/wbb.jpg',
                 albumPicAngle: 0,
                 albumPicRotate: null,
@@ -310,6 +342,7 @@
                 },
 
                 playThis: function (song) {
+                    this.songPaused = false;
                     var that = this;
                     // load mp3
                     this.songPlayingUrl = 'https://music.163.com/song/media/outer/url?id=' + song.id + '.mp3';
@@ -338,7 +371,9 @@
                         });
                 },
 
-                listenPlay: function () {
+                play: function () {
+                    this.$refs.audio.play();
+                    this.songPaused = false;
                     if (this.albumPicRotate) {
                         clearInterval(this.albumPicRotate);
                     }
@@ -351,12 +386,15 @@
                     }, 30);
                 },
 
-                listenPause: function () {
+                pause: function () {
+                    this.$refs.audio.pause();
+                    this.songPaused = true;
                     clearInterval(this.albumPicRotate);
                 },
 
                 playMV: function (mvid) {
                     this.$refs.audio.pause();
+                    this.songPaused = true;
 
                     this.showMV = true;
                     var that = this;
@@ -382,9 +420,6 @@
                     var hhmm = [f(date.getHours()), f(date.getMinutes())].join(':');
                     return [YMD, hhmm].join(' ');
                 },
-            },
-
-            watch: {
             },
 
             created: function() {
