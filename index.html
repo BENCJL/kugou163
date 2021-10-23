@@ -31,7 +31,7 @@
             width: 800px;
             height: 400px;
             transform: translate(-50%, -50%);
-            box-shadow: 0 0 10px 0 gray;
+            box-shadow: 0 0 8px 0 gray;
         }
 
         #musicPlayer .hd {
@@ -202,10 +202,11 @@
         }
 
         #musicPlayer .modal {
-            display: flex;
+            /* display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: center; */
             position: fixed;
+            z-index: -2;
             top: 0;
             left: 0;
             width: 100%;
@@ -214,6 +215,10 @@
         }
 
         #musicPlayer .modal video {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             width: 600px;
             height: 400px;
         }
@@ -269,10 +274,10 @@
                 </div>
             </div>
             <div class="ft">
-                <audio id="audio" src="media/song.mp3" :src="songPlayingUrl" controls autoplay @play="play" @pause="pause" ref="audio"></audio>
+                <audio id="audio" src="media/song.mp3" :src="songPlayingUrl" controls autoplay @play="listenPlay" @pause="listenPause" ref="audio"></audio>
             </div>
         </div>
-        <div class="modal" v-show="showMV" @click.self="removeMV">
+        <div class="modal" v-show="showMV" @click.self="removeMV" :style="{'z-index': showMV ? 1 : -2}">
             <video src="media/song.mp3" :src="mvurl" controls autoplay></video>
         </div>
         <img src="images/bg.webp" class="bg">
@@ -337,7 +342,7 @@
                         });
                 },
 
-                play: function () {
+                listenPlay: function () {
                     if (this.albumPicRotate) {
                         clearInterval(this.albumPicRotate);
                     }
@@ -350,7 +355,7 @@
                     }, 30);
                 },
 
-                pause: function () {
+                listenPause: function () {
                     clearInterval(this.albumPicRotate);
                 },
 
