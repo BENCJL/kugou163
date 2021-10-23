@@ -269,7 +269,7 @@
                 </div>
             </div>
             <div class="ft">
-                <audio id="audio" src="media/song.mp3" :src="songPlayingUrl" controls autoplay @click="play" @pause="pause" ref="audio"></audio>
+                <audio id="audio" src="media/song.mp3" :src="songPlayingUrl" controls autoplay @play="play" @pause="pause" ref="audio"></audio>
             </div>
         </div>
         <div class="modal" v-show="showMV" @click.self="removeMV">
@@ -339,7 +339,7 @@
 
                 play: function () {
                     if (this.albumPicRotate) {
-                            clearInterval(this.albumPicRotate);
+                        clearInterval(this.albumPicRotate);
                     }
 
                     var that = this;
