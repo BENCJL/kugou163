@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <!-- <meta name="referrer" content="no-referrer"> -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>musicPlayer</title>
@@ -268,11 +269,11 @@
                 </div>
             </div>
             <div class="ft">
-                <audio src="media/song.mp3" :src="songPlayingUrl" controls autoplay @play="play" @pause="pause"></audio>
+                <audio id="audio" src="media/song.mp3" :src="songPlayingUrl" controls autoplay ="play" @pause="pause" ref="audio"></audio>
             </div>
         </div>
         <div class="modal" v-show="showMV" @click.self="removeMV">
-            <video src="media/song.mp3" :src="mvurl" controls autoplay></video>
+            <video src="media/song.mp3" :src="mvurl" controls></video>
         </div>
         <img src="images/bg.webp" class="bg">
     </div>
@@ -308,11 +309,17 @@
                 },
 
                 playThis: function (song) {
+                    var that = this;
                     // load mp3
                     this.songPlayingUrl = 'https://music.163.com/song/media/outer/url?id=' + song.id + '.mp3';
+                    // axios.get('https://autumnfish.cn/song/url?id=' + song.id)
+                    //     .then(function (response) {
+                    //         console.log(response);
+                    //     }, function (error) {
+                    //         console.log(error);
+                    //     });
 
                     // get album pic
-                    var that = this;
                     axios.get('https://autumnfish.cn/album?id=' + song.album.id)
                         .then(function (response) {
                             that.albumPicUrl = response.data.album.picUrl;
@@ -348,6 +355,8 @@
                 },
 
                 playMV: function (mvid) {
+                    this.$refs.audio.pause();
+
                     this.showMV = true;
                     var that = this;
                     axios.get('https://autumnfish.cn/mv/url?id=' + mvid)
@@ -373,8 +382,10 @@
                     return [YMD, hhmm].join(' ');
                 },
             },
+            
             watch: {
             },
+
             created: function() {
                 this.searchSong();
             },
