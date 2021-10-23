@@ -269,11 +269,11 @@
                 </div>
             </div>
             <div class="ft">
-                <audio id="audio" src="media/song.mp3" :src="songPlayingUrl" controls autoplay ="play" @pause="pause" ref="audio"></audio>
+                <audio id="audio" src="media/song.mp3" :src="songPlayingUrl" controls autoplay @click="play" @pause="pause" ref="audio"></audio>
             </div>
         </div>
         <div class="modal" v-show="showMV" @click.self="removeMV">
-            <video src="media/song.mp3" :src="mvurl" controls></video>
+            <video src="media/song.mp3" :src="mvurl" controls autoplay></video>
         </div>
         <img src="images/bg.webp" class="bg">
     </div>
@@ -382,7 +382,7 @@
                     return [YMD, hhmm].join(' ');
                 },
             },
-            
+
             watch: {
             },
 
